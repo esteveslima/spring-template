@@ -9,5 +9,5 @@ import com.template.spring.demo.domain.repositories.user.register_user.UserGatew
 
 public interface UserGateway {
     public UserGatewayRegisterUserResultDTO registerUser(UserGatewayRegisterUserParametersDTO params) throws UserAlreadyExistsException;
-    public UserGatewayGetUserResultDTO getUser(UserGatewayGetUserParametersDTO params) throws UserNotFoundException;
+    public UserGatewayGetUserResultDTO getUserByUsername(UserGatewayGetUserParametersDTO params) throws UserNotFoundException;
 }

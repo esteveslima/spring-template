@@ -1,8 +1,8 @@
 #	Utility commands to setup local development environment
 
 COMPOSE_FILE_PATH = ./assets/environment/docker-compose.yml
-COMPOSE_SERVICE_NAME = jdk-container
-COMPOSE_PROJECT_NAME = jdk-environment
+COMPOSE_SERVICE_NAME = spring-container
+COMPOSE_PROJECT_NAME = spring-environment
 
 
 # clear temp files

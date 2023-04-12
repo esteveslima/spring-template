@@ -21,7 +21,7 @@ public class UserEntity {
             throw new UserFailedValidationUsernameFieldException(errorMessage, username);
         }
 
-        int usernameMinLength = 5;
+        int usernameMinLength = 3;
         int usernameMaxLength = 100;
         boolean isAdequateLength = username.length() >= usernameMinLength && username.length() <= usernameMaxLength;
         if(!isAdequateLength){

@@ -11,4 +11,5 @@ public class UserAlreadyExistsException extends RuntimeException {
         super();
         this.payload = payload;
     }
+
 }

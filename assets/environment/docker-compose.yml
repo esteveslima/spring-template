@@ -3,20 +3,20 @@
 version: '3.8'
 services:
 
-        #  jdk-container:
-        #    image: esteveslima/jdk-container-image:latest
-        #    build:
-        #      context: .
-        #      dockerfile: Dockerfile.dev
-        #    working_dir: /jdk-container
-        #    volumes:
-        #      - ../../:/jdk-container                                  # Hosting the project folder as volume
-        #      - /var/run/docker.sock:/var/run/docker.sock              # Bind host docker socket to the container(enable docker commands to host machine)
-        #    #   env_file:                                              # Disabled
-        #    #       - .env
-        #    restart: "no"
-        #    ports:
-        #      - '8080:8080'
+#    spring-container:
+#      image: esteveslima/spring-container-image:latest
+#      build:
+#        context: .
+#        dockerfile: Dockerfile.dev
+#      working_dir: /spring-container
+#      volumes:
+#        - ../../:/spring-container                                  # Hosting the project folder as volume
+#        - /var/run/docker.sock:/var/run/docker.sock              # Bind host docker socket to the container(enable docker commands to host machine)
+#      #   env_file:                                              # Disabled
+#      #       - .env
+#      restart: "no"
+#      ports:
+#        - '8080:8080'
 
     mysql-container:                                                  # Setting up local testing environment with mysql
       image: mysql
@@ -30,7 +30,7 @@ services:
       expose:
         - '3306'
       ports:
-        - '3306:8080'
+        - '3306:3306'
     workbench-container:                                              # Setting up mysql admin interface
       image: lscr.io/linuxserver/mysql-workbench
       environment:
@@ -44,6 +44,8 @@ services:
       security_opt:
         - seccomp:unconfined
       restart: always
+      depends_on:
+          - mysql-container
       ports:
         - '3307:3000'                                                 # interface available at http://localhost:3307
 

@@ -1,65 +1,79 @@
 package com.template.spring.demo.adapters.gateways.databases.repositories;
 
-import com.template.spring.demo.application.ports.HashGateway;
+import com.template.spring.demo.adapters.gateways.databases.models.UserEntityDatabaseModel;
+import com.template.spring.demo.application.interfaces.ports.HashGateway;
 import com.template.spring.demo.domain.exceptions.user.UserAlreadyExistsException;
 import com.template.spring.demo.domain.exceptions.user.UserNotFoundException;
+import com.template.spring.demo.domain.repositories.user.UserGateway;
 import com.template.spring.demo.domain.repositories.user.get_user.UserGatewayGetUserParametersDTO;
 import com.template.spring.demo.domain.repositories.user.get_user.UserGatewayGetUserResultDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.template.spring.demo.domain.entities.UserEntity;
-import com.template.spring.demo.domain.repositories.user.UserGateway;
 import com.template.spring.demo.domain.repositories.user.register_user.UserGatewayRegisterUserParametersDTO;
 import com.template.spring.demo.domain.repositories.user.register_user.UserGatewayRegisterUserResultDTO;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
 
-@Service
-public class UserDatabaseRepositoryGateway implements UserGateway {
+@Repository
+public class UserDatabaseRepositoryGateway implements UserGateway  {
 
-    private Map<String, UserEntity> memoryDb = new HashMap<String, UserEntity>();
-
-    //
-
+    private EntityManager entityManager;
     private HashGateway hashGateway;
 
     @Autowired
-    public UserDatabaseRepositoryGateway(HashGateway hashGateway) {
+    public UserDatabaseRepositoryGateway(EntityManager entityManager, HashGateway hashGateway) {
+        this.entityManager = entityManager;
         this.hashGateway = hashGateway;
     }
 
     @Override
+    @Transactional
     public UserGatewayRegisterUserResultDTO registerUser(UserGatewayRegisterUserParametersDTO params) throws UserAlreadyExistsException {
-        UserEntity userFound = memoryDb.get(params.username);
-        boolean isUserFound = userFound != null;
-        if(isUserFound){
+
+        int idInsertOperation = 0;
+        String encodedPassword = this.hashGateway.hashValue(params.password);
+        UserEntityDatabaseModel insertObj = new UserEntityDatabaseModel(
+                idInsertOperation,
+                params.username,
+                params.email,
+                encodedPassword
+        );
+
+        try {
+            UserEntityDatabaseModel resultObj = this.entityManager.merge(insertObj);
+
+            return new UserGatewayRegisterUserResultDTO(
+                    resultObj.id,
+                    resultObj.username,
+                    resultObj.email
+            );
+        } catch(PersistenceException exception) {
             throw new UserAlreadyExistsException(params.username);
         }
-
-        int newUserId = memoryDb.size();
-        String encodedPassword = this.hashGateway.hashValue(params.password);
-
-        UserEntity newUser = new UserEntity(newUserId, params.username, params.email, encodedPassword);
-        memoryDb.put(params.username, newUser);
-
-        return new UserGatewayRegisterUserResultDTO(newUser.id, newUser.username, newUser.email);
     }
 
     @Override
-    public UserGatewayGetUserResultDTO getUser(UserGatewayGetUserParametersDTO params) throws UserNotFoundException {
-        UserEntity userFound = memoryDb.get(params.username);
+    public UserGatewayGetUserResultDTO getUserByUsername(UserGatewayGetUserParametersDTO params) throws UserNotFoundException {
+        TypedQuery<UserEntityDatabaseModel> query = entityManager.createQuery(
+                "SELECT users FROM UserEntityDatabaseModel as users WHERE users.username = :usernameValue",
+                UserEntityDatabaseModel.class
+        ).setParameter("usernameValue", params.username);
 
-        boolean isUserFound = userFound != null;
-        if(!isUserFound){
+        try{
+            UserEntityDatabaseModel resultObj = query.getSingleResult();
+
+            return new UserGatewayGetUserResultDTO(
+                    resultObj.id,
+                    resultObj.username,
+                    resultObj.email,
+                    resultObj.password
+            );
+        } catch(NoResultException exception) {
             throw new UserNotFoundException(params.username);
         }
-
-        return new UserGatewayGetUserResultDTO(
-                userFound.id,
-                userFound.username,
-                userFound.email,
-                userFound.password
-        );
     }
 }

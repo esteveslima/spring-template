@@ -1,5 +1,7 @@
 **/.*/
+**/.env**
 !.gitkeep
+
 
 HELP.md
 target/

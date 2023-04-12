@@ -1,0 +1,24 @@
+# Setting up a spring container as development environment
+
+# Using jdk image
+FROM amazoncorretto:20-alpine as springBuilderStage
+
+# Install extra useful packages for alpine version
+RUN apk add --no-cache bash nano less sudo curl && \
+    apk add --no-cache git
+
+# Install docker CLI(daemon binded to the host machine using volumes in compose file)
+RUN apk add --update docker openrc && \
+    rc-update add docker boot    
+
+# Change and config user
+ENV EDITOR=nano
+ENV LESS=R
+RUN echo "complete -d cd" >> ~/.bashrc
+RUN echo "PS1='\e[1;30m(\t)[\w]\$ \e[0m'" >> ~/.bashrc; source ~/.bashrc
+
+# Expose some usable ports
+EXPOSE 8080-8080
+
+# Keeps de container running
+CMD tail -f /dev/null
