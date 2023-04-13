@@ -1,12 +1,16 @@
 package com.template.spring.demo.infrastructure.aspects.logs;
 
 import com.template.spring.demo.application.interfaces.ports.LogGateway;
-import com.template.spring.demo.application.interfaces.types.log_payload.EnumLogOperationLevel;
-import com.template.spring.demo.application.interfaces.types.log_payload.LogPayload;
+import com.template.spring.demo.infrastructure.interfaces.dtos.log_payload.LogPayload;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Aspect
 @Component
@@ -44,29 +48,51 @@ public class LogAspect {
         logPayload.setParams(params);
         logPayload.setStartTime(startTime);
 
-        Object result;
         try{
-            result = joinPoint.proceed();
+            Object result = joinPoint.proceed();
             long executionTime = System.currentTimeMillis() - startTime;
+            Map details = new HashMap<String, Object>();
 
-            logPayload.setLevel(EnumLogOperationLevel.SUCCESS);
+            logPayload.setLevel(LogPayload.EnumLogOperationLevel.SUCCESS);
             logPayload.setResult(result);
             logPayload.setExecutionTime(executionTime);
+            logPayload.setDetails(details);
 
             logger.log(logPayload);
 
             return result;
         } catch(Exception exception) {
-            result = exception.toString();
+            Object result = exception.getClass().getName();
             long executionTime = System.currentTimeMillis() - startTime;
+            Map details = new HashMap<String, Object>();
+            Optional<Throwable> optionalCause = Optional.ofNullable(exception.getCause());
+            if(optionalCause.isPresent()) {
+                details.put("exceptionCause", optionalCause.get().toString());
+            }
+            Optional<Object> optionalPayload = this.getPropertyContent(exception, "payload");
+            if(optionalPayload.isPresent()) {
+                details.put("exceptionPayload", optionalPayload.get());
+            }
 
-            logPayload.setLevel(EnumLogOperationLevel.ERROR);
+            logPayload.setLevel(LogPayload.EnumLogOperationLevel.ERROR);
             logPayload.setResult(result);
             logPayload.setExecutionTime(executionTime);
+            logPayload.setDetails(details);
 
             logger.error(logPayload);
 
             throw exception;
+        }
+    }
+
+    private Optional<Object> getPropertyContent(Object myObject, String propertyName) {
+        try {
+            Field field = myObject.getClass().getDeclaredField(propertyName);
+            field.setAccessible(true);
+            Object propertyContent = field.get(myObject);
+            return Optional.ofNullable(propertyContent);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            return Optional.empty();
         }
     }
 }

@@ -1,11 +1,9 @@
 package com.template.spring.demo.adapters.entrypoints.controllers;
 
-import com.template.spring.demo.adapters.entrypoints.controllers.dtos.request.auth.LoginRestRequestBodyDTO;
-import com.template.spring.demo.adapters.entrypoints.controllers.dtos.response.auth.LoginRestResponseDTO;
+import com.template.spring.demo.adapters.entrypoints.controllers.dtos.auth.LoginRestControllerEntrypointDTO;
 import com.template.spring.demo.application.exceptions.auth.LoginUnauthorizedException;
+import com.template.spring.demo.application.interfaces.dtos.usecases.auth.LoginUseCaseDTO;
 import com.template.spring.demo.application.usecases.auth.LoginUseCase;
-import com.template.spring.demo.application.interfaces.usecases.auth.login.LoginUseCaseParametersDTO;
-import com.template.spring.demo.application.interfaces.usecases.auth.login.LoginUseCaseResultDTO;
 import com.template.spring.demo.domain.exceptions.user.UserNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +20,18 @@ public class AuthControllerEntrypoint {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public LoginRestResponseDTO login(@Valid @RequestBody LoginRestRequestBodyDTO requestBody) {
+    public LoginRestControllerEntrypointDTO.Response.Body login(
+            @Valid @RequestBody LoginRestControllerEntrypointDTO.Request.Body requestBody
+    ) {
         try{
-            LoginUseCaseParametersDTO useCaseParamsDTO = new LoginUseCaseParametersDTO(
+            LoginUseCaseDTO.Params useCaseParamsDTO = new LoginUseCaseDTO.Params(
                     requestBody.username,
                     requestBody.password
             );
 
-            LoginUseCaseResultDTO useCaseResultDTO = loginUseCase.execute(useCaseParamsDTO);
+            LoginUseCaseDTO.Result useCaseResultDTO = loginUseCase.execute(useCaseParamsDTO);
 
-            return new LoginRestResponseDTO(
+            return new LoginRestControllerEntrypointDTO.Response.Body(
                     useCaseResultDTO.token
             );
         } catch (UserNotFoundException exception){

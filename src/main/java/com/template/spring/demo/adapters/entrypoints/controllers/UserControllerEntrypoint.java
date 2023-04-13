@@ -1,10 +1,8 @@
 package com.template.spring.demo.adapters.entrypoints.controllers;
 
-import com.template.spring.demo.adapters.entrypoints.controllers.dtos.request.user.RegisterUserRestRequestBodyDTO;
-import com.template.spring.demo.adapters.entrypoints.controllers.dtos.response.user.RegisterUserRestResponseDTO;
+import com.template.spring.demo.adapters.entrypoints.controllers.dtos.user.RegisterUserRestControllerEntrypointDTO;
+import com.template.spring.demo.application.interfaces.dtos.usecases.user.RegisterUserUseCaseDTO;
 import com.template.spring.demo.application.usecases.user.RegisterUserUseCase;
-import com.template.spring.demo.application.interfaces.usecases.user.register_user.RegisterUserUseCaseParametersDTO;
-import com.template.spring.demo.application.interfaces.usecases.user.register_user.RegisterUserUseCaseResultDTO;
 import com.template.spring.demo.domain.exceptions.user.UserAlreadyExistsException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +18,19 @@ public class UserControllerEntrypoint {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public RegisterUserRestResponseDTO registerUser(@Valid @RequestBody RegisterUserRestRequestBodyDTO requestBody) {
+    public RegisterUserRestControllerEntrypointDTO.Response.Body registerUser(
+            @Valid @RequestBody RegisterUserRestControllerEntrypointDTO.Request.Body requestBody
+    ) {
         try {
-            RegisterUserUseCaseParametersDTO useCaseParamsDTO = new RegisterUserUseCaseParametersDTO(
+            RegisterUserUseCaseDTO.Params useCaseParamsDTO = new RegisterUserUseCaseDTO.Params(
                     requestBody.username,
                     requestBody.email,
                     requestBody.password
             );
 
-            RegisterUserUseCaseResultDTO useCaseResultDTO = registerUserUseCase.execute(useCaseParamsDTO);
+            RegisterUserUseCaseDTO.Result useCaseResultDTO = registerUserUseCase.execute(useCaseParamsDTO);
 
-            return new RegisterUserRestResponseDTO(
+            return new RegisterUserRestControllerEntrypointDTO.Response.Body(
                     useCaseResultDTO.username,
                     useCaseResultDTO.email,
                     useCaseResultDTO.id

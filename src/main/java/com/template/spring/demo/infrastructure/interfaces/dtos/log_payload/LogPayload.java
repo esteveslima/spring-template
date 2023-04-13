@@ -1,4 +1,4 @@
-package com.template.spring.demo.application.interfaces.types.log_payload;
+package com.template.spring.demo.infrastructure.interfaces.dtos.log_payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,4 +16,10 @@ public class LogPayload {
     public long startTime;
     public long executionTime;
     public Object details;
+
+    public static enum EnumLogOperationLevel {
+        SUCCESS,
+        WARN,
+        ERROR
+    };
 }

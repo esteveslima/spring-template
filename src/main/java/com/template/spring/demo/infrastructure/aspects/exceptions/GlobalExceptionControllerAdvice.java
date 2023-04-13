@@ -1,6 +1,6 @@
 package com.template.spring.demo.infrastructure.aspects.exceptions;
 
-import com.template.spring.demo.application.interfaces.types.error_response.ErrorResponseHttp;
+import com.template.spring.demo.infrastructure.interfaces.dtos.error_response.ErrorResponseHttp;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

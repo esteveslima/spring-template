@@ -12,4 +12,9 @@ public class UserAlreadyExistsException extends RuntimeException {
         this.payload = payload;
     }
 
+    public UserAlreadyExistsException(String payload, Throwable cause) {
+        super(cause);
+        this.payload = payload;
+    }
+
 }

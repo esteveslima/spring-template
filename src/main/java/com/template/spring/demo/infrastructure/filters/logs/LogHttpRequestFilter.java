@@ -2,14 +2,13 @@ package com.template.spring.demo.infrastructure.filters.logs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.template.spring.demo.application.interfaces.ports.LogGateway;
-import com.template.spring.demo.application.interfaces.types.log_payload.EnumLogOperationLevel;
-import com.template.spring.demo.application.interfaces.types.log_payload.LogPayload;
+import com.template.spring.demo.infrastructure.interfaces.dtos.log_payload.LogPayload;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
@@ -20,6 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
+@Order(2)
 public class LogHttpRequestFilter implements Filter {
 
     @Autowired
@@ -40,7 +40,7 @@ public class LogHttpRequestFilter implements Filter {
         long executionTime = System.currentTimeMillis() - startTime;
         String context = "entrypointAdapter";
         String operation = String.format("%s %s", httpServletRequest.getMethod(), httpServletRequest.getRequestURI());
-        EnumLogOperationLevel logOperationLevel = this.getLogOperationLevel(httpServletResponse);
+        LogPayload.EnumLogOperationLevel logOperationLevel = this.getLogOperationLevel(httpServletResponse);
         Object params = this.getLogParams(requestWrapper);
         Object result = this.getLogResult(responseWrapper);
         Object details = this.getLogDetails(httpServletRequest);
@@ -55,26 +55,23 @@ public class LogHttpRequestFilter implements Filter {
                 executionTime,
                 details
         );
-        logger.log(logPayload);
+        boolean isErrorLog = logPayload.level == LogPayload.EnumLogOperationLevel.ERROR;
+        if(isErrorLog){
+            logger.error(logPayload);
+        } else {
+            logger.log(logPayload);
+        }
 
         responseWrapper.copyBodyToResponse();
     }
 
-    private EnumLogOperationLevel getLogOperationLevel(HttpServletResponse httpServletResponse){
-        EnumLogOperationLevel logOperationLevel;
+    private LogPayload.EnumLogOperationLevel getLogOperationLevel(HttpServletResponse httpServletResponse){
+        LogPayload.EnumLogOperationLevel logOperationLevel;
         boolean isSuccessfulResponse = httpServletResponse.getStatus() >= 200 && httpServletResponse.getStatus() <= 299;
         boolean isErrorResponse = httpServletResponse.getStatus() >= 400 && httpServletResponse.getStatus() <= 599;
-        if(isSuccessfulResponse){
-            logOperationLevel = EnumLogOperationLevel.SUCCESS;
-        } else {
-            if(isErrorResponse) {
-                logOperationLevel = EnumLogOperationLevel.ERROR;
-            } else {
-                logOperationLevel = EnumLogOperationLevel.WARN;
-            }
-        }
-
-        return logOperationLevel;
+        if(isSuccessfulResponse) return LogPayload.EnumLogOperationLevel.SUCCESS;
+        if(isErrorResponse) return LogPayload.EnumLogOperationLevel.ERROR;
+        return LogPayload.EnumLogOperationLevel.WARN;
     }
 
     private Object getLogParams(ContentCachingRequestWrapper requestWrapper) {

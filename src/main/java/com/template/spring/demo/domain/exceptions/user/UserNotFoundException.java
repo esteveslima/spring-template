@@ -11,4 +11,9 @@ public class UserNotFoundException extends RuntimeException {
         super();
         this.payload = payload;
     }
+
+    public UserNotFoundException(String payload, Throwable cause) {
+        super(cause);
+        this.payload = payload;
+    }
 }

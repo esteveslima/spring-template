@@ -1,4 +1,4 @@
-package com.template.spring.demo.domain.exceptions.user.validation;
+package com.template.spring.demo.domain.exceptions.user.validations;
 
 public class UserFailedValidationEmailFieldException extends Exception {
     public final String payload;

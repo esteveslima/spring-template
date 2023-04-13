@@ -1,7 +1,7 @@
 package com.template.spring.demo.infrastructure.annotations.validators.user;
 
 import com.template.spring.demo.domain.entities.UserEntity;
-import com.template.spring.demo.domain.exceptions.user.validation.UserFailedValidationPasswordFieldException;
+import com.template.spring.demo.domain.exceptions.user.validations.UserFailedValidationPasswordFieldException;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -27,7 +27,7 @@ public @interface UserPasswordFieldValidator {
                 return true;
             } catch (UserFailedValidationPasswordFieldException exception) {
                 String errorMessage = exception.getMessage();
-                context.buildConstraintViolationWithTemplate(errorMessage).addConstraintViolation();
+                context.buildConstraintViolationWithTemplate(errorMessage).addConstraintViolation(); // add exception validation error message to the response
                 return false;
             }
         }

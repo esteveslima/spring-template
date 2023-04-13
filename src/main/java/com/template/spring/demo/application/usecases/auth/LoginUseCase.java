@@ -2,13 +2,9 @@ package com.template.spring.demo.application.usecases.auth;
 
 import com.template.spring.demo.application.interfaces.ports.HashGateway;
 import com.template.spring.demo.application.exceptions.auth.LoginUnauthorizedException;
-import com.template.spring.demo.application.interfaces.usecases.auth.login.LoginUseCaseParametersDTO;
-import com.template.spring.demo.application.interfaces.usecases.auth.login.LoginUseCaseResultDTO;
+import com.template.spring.demo.application.interfaces.dtos.usecases.auth.LoginUseCaseDTO;
 import com.template.spring.demo.domain.repositories.user.UserGateway;
-import com.template.spring.demo.domain.repositories.user.get_user.UserGatewayGetUserParametersDTO;
-import com.template.spring.demo.domain.repositories.user.get_user.UserGatewayGetUserResultDTO;
-import com.template.spring.demo.domain.repositories.user.register_user.UserGatewayRegisterUserParametersDTO;
-import com.template.spring.demo.domain.repositories.user.register_user.UserGatewayRegisterUserResultDTO;
+import com.template.spring.demo.domain.repositories.user.dtos.UserGatewayGetUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +22,12 @@ public class LoginUseCase {
         this.hashGateway = hashGateway;
     }
 
-    public LoginUseCaseResultDTO execute(LoginUseCaseParametersDTO params) {
-        UserGatewayGetUserParametersDTO getUserParametersDTO = new UserGatewayGetUserParametersDTO(
+    public LoginUseCaseDTO.Result execute(LoginUseCaseDTO.Params params) {
+        UserGatewayGetUserDTO.Params getUserParametersDTO = new UserGatewayGetUserDTO.Params(
                 params.username
         );
 
-        UserGatewayGetUserResultDTO userResult = this.userGateway.getUserByUsername(getUserParametersDTO);
+        UserGatewayGetUserDTO.Result userResult = this.userGateway.getUserByUsername(getUserParametersDTO);
 
         boolean isInputPasswordCorrect = this.hashGateway.compareHash(params.password, userResult.hashPassword);
         if(!isInputPasswordCorrect){
@@ -39,7 +35,7 @@ public class LoginUseCase {
         }
 
         String authToken = UUID.randomUUID().toString();
-        return new LoginUseCaseResultDTO(
+        return new LoginUseCaseDTO.Result(
                 authToken
         );
     }

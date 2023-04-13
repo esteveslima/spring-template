@@ -1,10 +1,8 @@
 package com.template.spring.demo.application.usecases.user;
 
-import com.template.spring.demo.application.interfaces.usecases.user.register_user.RegisterUserUseCaseParametersDTO;
-import com.template.spring.demo.application.interfaces.usecases.user.register_user.RegisterUserUseCaseResultDTO;
+import com.template.spring.demo.application.interfaces.dtos.usecases.user.RegisterUserUseCaseDTO;
 import com.template.spring.demo.domain.repositories.user.UserGateway;
-import com.template.spring.demo.domain.repositories.user.register_user.UserGatewayRegisterUserParametersDTO;
-import com.template.spring.demo.domain.repositories.user.register_user.UserGatewayRegisterUserResultDTO;
+import com.template.spring.demo.domain.repositories.user.dtos.UserGatewayRegisterUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,17 +16,17 @@ public class RegisterUserUseCase {
         this.userGateway = userGateway;
     }
 
-    public RegisterUserUseCaseResultDTO execute(RegisterUserUseCaseParametersDTO params) {
+    public RegisterUserUseCaseDTO.Result execute(RegisterUserUseCaseDTO.Params params) {
 
-        UserGatewayRegisterUserParametersDTO registerUserParametersDTO = new UserGatewayRegisterUserParametersDTO(
+        UserGatewayRegisterUserDTO.Params registerUserParametersDTO = new UserGatewayRegisterUserDTO.Params(
                 params.username,
                 params.email,
                 params.password
         );
 
-        UserGatewayRegisterUserResultDTO registrationResult = this.userGateway.registerUser(registerUserParametersDTO);
+        UserGatewayRegisterUserDTO.Result registrationResult = this.userGateway.registerUser(registerUserParametersDTO);
 
-        return new RegisterUserUseCaseResultDTO(
+        return new RegisterUserUseCaseDTO.Result(
                 registrationResult.username,
                 registrationResult.email,
                 registrationResult.id

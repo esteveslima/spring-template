@@ -1,4 +1,4 @@
-package com.template.spring.demo.application.interfaces.types.error_response;
+package com.template.spring.demo.infrastructure.interfaces.dtos.error_response;
 
 import lombok.Data;
 

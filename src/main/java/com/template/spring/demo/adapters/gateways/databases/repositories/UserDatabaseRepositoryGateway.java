@@ -5,10 +5,8 @@ import com.template.spring.demo.application.interfaces.ports.HashGateway;
 import com.template.spring.demo.domain.exceptions.user.UserAlreadyExistsException;
 import com.template.spring.demo.domain.exceptions.user.UserNotFoundException;
 import com.template.spring.demo.domain.repositories.user.UserGateway;
-import com.template.spring.demo.domain.repositories.user.get_user.UserGatewayGetUserParametersDTO;
-import com.template.spring.demo.domain.repositories.user.get_user.UserGatewayGetUserResultDTO;
-import com.template.spring.demo.domain.repositories.user.register_user.UserGatewayRegisterUserParametersDTO;
-import com.template.spring.demo.domain.repositories.user.register_user.UserGatewayRegisterUserResultDTO;
+import com.template.spring.demo.domain.repositories.user.dtos.UserGatewayGetUserDTO;
+import com.template.spring.demo.domain.repositories.user.dtos.UserGatewayRegisterUserDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceException;
@@ -32,7 +30,7 @@ public class UserDatabaseRepositoryGateway implements UserGateway  {
 
     @Override
     @Transactional
-    public UserGatewayRegisterUserResultDTO registerUser(UserGatewayRegisterUserParametersDTO params) throws UserAlreadyExistsException {
+    public UserGatewayRegisterUserDTO.Result registerUser(UserGatewayRegisterUserDTO.Params params) throws UserAlreadyExistsException {
 
         int idInsertOperation = 0;
         String encodedPassword = this.hashGateway.hashValue(params.password);
@@ -46,18 +44,18 @@ public class UserDatabaseRepositoryGateway implements UserGateway  {
         try {
             UserEntityDatabaseModel resultObj = this.entityManager.merge(insertObj);
 
-            return new UserGatewayRegisterUserResultDTO(
+            return new UserGatewayRegisterUserDTO.Result(
                     resultObj.id,
                     resultObj.username,
                     resultObj.email
             );
         } catch(PersistenceException exception) {
-            throw new UserAlreadyExistsException(params.username);
+            throw new UserAlreadyExistsException(params.username, exception);
         }
     }
 
     @Override
-    public UserGatewayGetUserResultDTO getUserByUsername(UserGatewayGetUserParametersDTO params) throws UserNotFoundException {
+    public UserGatewayGetUserDTO.Result getUserByUsername(UserGatewayGetUserDTO.Params params) throws UserNotFoundException {
         TypedQuery<UserEntityDatabaseModel> query = entityManager.createQuery(
                 "SELECT users FROM UserEntityDatabaseModel as users WHERE users.username = :usernameValue",
                 UserEntityDatabaseModel.class
@@ -66,14 +64,14 @@ public class UserDatabaseRepositoryGateway implements UserGateway  {
         try{
             UserEntityDatabaseModel resultObj = query.getSingleResult();
 
-            return new UserGatewayGetUserResultDTO(
+            return new UserGatewayGetUserDTO.Result(
                     resultObj.id,
                     resultObj.username,
                     resultObj.email,
                     resultObj.password
             );
         } catch(NoResultException exception) {
-            throw new UserNotFoundException(params.username);
+            throw new UserNotFoundException(params.username, exception);
         }
     }
 }

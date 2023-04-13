@@ -1,9 +1,9 @@
 package com.template.spring.demo.domain.entities;
 
-import com.template.spring.demo.domain.exceptions.user.validation.UserFailedValidationPasswordFieldException;
+import com.template.spring.demo.domain.exceptions.user.validations.UserFailedValidationPasswordFieldException;
 import lombok.Data;
-import com.template.spring.demo.domain.exceptions.user.validation.UserFailedValidationEmailFieldException;
-import com.template.spring.demo.domain.exceptions.user.validation.UserFailedValidationUsernameFieldException;
+import com.template.spring.demo.domain.exceptions.user.validations.UserFailedValidationEmailFieldException;
+import com.template.spring.demo.domain.exceptions.user.validations.UserFailedValidationUsernameFieldException;
 
 import java.util.regex.Pattern;
 
