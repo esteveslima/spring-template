@@ -1,8 +1,6 @@
 package com.template.spring.demo.adapters.entrypoints.controllers.dtos.user;
 
-import com.template.spring.demo.infrastructure.annotations.validators.user.UserEmailFieldValidator;
-import com.template.spring.demo.infrastructure.annotations.validators.user.UserPasswordFieldValidator;
-import com.template.spring.demo.infrastructure.annotations.validators.user.UserUsernameFieldValidator;
+import com.template.spring.demo.infrastructure.annotations.validators.UserEntityFieldValidator;
 import lombok.Data;
 
 public class RegisterUserRestControllerEntrypointDTO {
@@ -10,13 +8,13 @@ public class RegisterUserRestControllerEntrypointDTO {
     public class Request {
         @Data
         public static class Body {
-            @UserUsernameFieldValidator
+            @UserEntityFieldValidator(fieldName = "username")
             public final String username;
 
-            @UserEmailFieldValidator
+            @UserEntityFieldValidator(fieldName = "email")
             public final String email;
 
-            @UserPasswordFieldValidator
+            @UserEntityFieldValidator(fieldName = "password")
             public final String password;
         }
     }

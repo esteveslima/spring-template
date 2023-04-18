@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ErrorResponseHttp {
+public class ErrorResponseHttpDTO {
     public final int status;
     public final String error;
     public final List<String> messages;

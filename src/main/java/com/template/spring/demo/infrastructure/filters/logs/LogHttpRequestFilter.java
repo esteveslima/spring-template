@@ -1,12 +1,13 @@
 package com.template.spring.demo.infrastructure.filters.logs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.template.spring.demo.application.interfaces.ports.LogGateway;
-import com.template.spring.demo.infrastructure.interfaces.dtos.log_payload.LogPayload;
+import com.template.spring.demo.application.interfaces.ports.log.LogGateway;
+import com.template.spring.demo.infrastructure.interfaces.dtos.log_payload.LogPayloadDTO;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.ContentCachingRequestWrapper;
@@ -19,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-@Order(2)
+@Order(Ordered.HIGHEST_PRECEDENCE + 1)  // Run right after the highest precedence
 public class LogHttpRequestFilter implements Filter {
 
     @Autowired
@@ -40,12 +41,12 @@ public class LogHttpRequestFilter implements Filter {
         long executionTime = System.currentTimeMillis() - startTime;
         String context = "entrypointAdapter";
         String operation = String.format("%s %s", httpServletRequest.getMethod(), httpServletRequest.getRequestURI());
-        LogPayload.EnumLogOperationLevel logOperationLevel = this.getLogOperationLevel(httpServletResponse);
+        LogPayloadDTO.EnumLogOperationLevel logOperationLevel = this.getLogOperationLevel(httpServletResponse);
         Object params = this.getLogParams(requestWrapper);
         Object result = this.getLogResult(responseWrapper);
         Object details = this.getLogDetails(httpServletRequest);
 
-        LogPayload logPayload = new LogPayload(
+        LogPayloadDTO logPayload = new LogPayloadDTO(
                 logOperationLevel,
                 context,
                 operation,
@@ -55,7 +56,7 @@ public class LogHttpRequestFilter implements Filter {
                 executionTime,
                 details
         );
-        boolean isErrorLog = logPayload.level == LogPayload.EnumLogOperationLevel.ERROR;
+        boolean isErrorLog = logPayload.level == LogPayloadDTO.EnumLogOperationLevel.ERROR;
         if(isErrorLog){
             logger.error(logPayload);
         } else {
@@ -65,13 +66,13 @@ public class LogHttpRequestFilter implements Filter {
         responseWrapper.copyBodyToResponse();
     }
 
-    private LogPayload.EnumLogOperationLevel getLogOperationLevel(HttpServletResponse httpServletResponse){
-        LogPayload.EnumLogOperationLevel logOperationLevel;
+    private LogPayloadDTO.EnumLogOperationLevel getLogOperationLevel(HttpServletResponse httpServletResponse){
+        LogPayloadDTO.EnumLogOperationLevel logOperationLevel;
         boolean isSuccessfulResponse = httpServletResponse.getStatus() >= 200 && httpServletResponse.getStatus() <= 299;
         boolean isErrorResponse = httpServletResponse.getStatus() >= 400 && httpServletResponse.getStatus() <= 599;
-        if(isSuccessfulResponse) return LogPayload.EnumLogOperationLevel.SUCCESS;
-        if(isErrorResponse) return LogPayload.EnumLogOperationLevel.ERROR;
-        return LogPayload.EnumLogOperationLevel.WARN;
+        if(isSuccessfulResponse) return LogPayloadDTO.EnumLogOperationLevel.SUCCESS;
+        if(isErrorResponse) return LogPayloadDTO.EnumLogOperationLevel.ERROR;
+        return LogPayloadDTO.EnumLogOperationLevel.WARN;
     }
 
     private Object getLogParams(ContentCachingRequestWrapper requestWrapper) {
@@ -87,8 +88,8 @@ public class LogHttpRequestFilter implements Filter {
         Object requestQueryParams = requestWrapper.getParameterMap();
         Object requestHeaders = Collections.list(requestWrapper.getHeaderNames()).stream()
                 .collect(Collectors.toMap(
-                        key -> key,
-                        key -> requestWrapper.getHeader(key),
+                        (key) -> key,
+                        (key) -> requestWrapper.getHeader(key),
                         (existingKey, newKey) -> newKey
                 ));
         params.put("body", requestBody);
@@ -111,8 +112,8 @@ public class LogHttpRequestFilter implements Filter {
         Map result = new HashMap<String, Object>();
         Object responseHeaders = responseWrapper.getHeaderNames().stream()
                 .collect(Collectors.toMap(
-                        key -> key,
-                        key -> responseWrapper.getHeader(key),
+                        (key) -> key,
+                        (key) -> responseWrapper.getHeader(key),
                         (existingKey, newKey) -> newKey
                 ));
         result.put("body", responseBody);

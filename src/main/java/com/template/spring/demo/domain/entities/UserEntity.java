@@ -1,10 +1,10 @@
 package com.template.spring.demo.domain.entities;
 
-import com.template.spring.demo.domain.exceptions.user.validations.UserFailedValidationPasswordFieldException;
+import com.template.spring.demo.domain.exceptions.user.UserFieldFailedValidationException;
 import lombok.Data;
-import com.template.spring.demo.domain.exceptions.user.validations.UserFailedValidationEmailFieldException;
-import com.template.spring.demo.domain.exceptions.user.validations.UserFailedValidationUsernameFieldException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @Data
@@ -15,10 +15,26 @@ public class UserEntity {
     public final String email;
     public final String password;
 
-    public static void validateUsername(String username) throws UserFailedValidationUsernameFieldException {
+    public final EnumUserRole role;
+
+    public enum EnumUserRole {
+        USER,
+        STORE;
+
+        public class MapValue {
+            public static final String USER = "USER";
+            public static final String STORE = "STORE";
+        }
+    }
+
+    //
+
+    public static void validateUsername(String username) throws UserFieldFailedValidationException {
         if(username == null){
             String errorMessage = "Username cannot be null";
-            throw new UserFailedValidationUsernameFieldException(errorMessage, username);
+            Map<String, Object> validationFailuresMap = new HashMap<String, Object>();
+            validationFailuresMap.put("username", username);
+            throw new UserFieldFailedValidationException(errorMessage, validationFailuresMap);
         }
 
         int usernameMinLength = 3;
@@ -26,32 +42,40 @@ public class UserEntity {
         boolean isAdequateLength = username.length() >= usernameMinLength && username.length() <= usernameMaxLength;
         if(!isAdequateLength){
             String errorMessage = String.format("Username length must be between %d and %d", usernameMinLength, usernameMaxLength);
-            throw new UserFailedValidationUsernameFieldException(errorMessage, username);
+            Map<String, Object> validationFailuresMap = new HashMap<String, Object>();
+            validationFailuresMap.put("username", username);
+            throw new UserFieldFailedValidationException(errorMessage, validationFailuresMap);
         }
 
         return;
     }
 
-    public static void validateEmail(String email) throws UserFailedValidationEmailFieldException {
+    public static void validateEmail(String email) throws UserFieldFailedValidationException {
         if(email == null){
             String errorMessage = "Email cannot be null";
-            throw new UserFailedValidationEmailFieldException(errorMessage, email);
+            Map<String, Object> validationFailuresMap = new HashMap<String, Object>();
+            validationFailuresMap.put("email", email);
+            throw new UserFieldFailedValidationException(errorMessage, validationFailuresMap);
         }
 
         Pattern emailRegexPattern = Pattern.compile("^(.+)@(\\S+)$");
         boolean isValidEmail = emailRegexPattern.matcher(email).matches();
         if(!isValidEmail){
             String errorMessage = "Invalid email";
-            throw new UserFailedValidationEmailFieldException(errorMessage, email);
+            Map<String, Object> validationFailuresMap = new HashMap<String, Object>();
+            validationFailuresMap.put("email", email);
+            throw new UserFieldFailedValidationException(errorMessage, validationFailuresMap);
         }
 
         return;
     }
 
-    public static void validatePassword(String password) throws UserFailedValidationPasswordFieldException {
+    public static void validatePassword(String password) throws UserFieldFailedValidationException {
         if(password == null){
             String errorMessage = "Password cannot be null";
-            throw new UserFailedValidationPasswordFieldException(errorMessage, password);
+            Map<String, Object> validationFailuresMap = new HashMap<String, Object>();
+            validationFailuresMap.put("password", password);
+            throw new UserFieldFailedValidationException(errorMessage, validationFailuresMap);
         }
 
         String oneUppercaseCharacterRegexStringPattern = "(?=.*[A-Z])";
@@ -69,8 +93,10 @@ public class UserEntity {
         Pattern strongPasswordRegexPattern = Pattern.compile(strongPasswordStringPattern);
         boolean isValidPassword = strongPasswordRegexPattern.matcher(password).matches();
         if(!isValidPassword){
-            String errorMessage = "Password weak";
-            throw new UserFailedValidationPasswordFieldException(errorMessage, password);
+            String errorMessage = "Weak password";
+            Map<String, Object> validationFailuresMap = new HashMap<String, Object>();
+            validationFailuresMap.put("password", password);
+            throw new UserFieldFailedValidationException(errorMessage, validationFailuresMap);
         }
 
         return;

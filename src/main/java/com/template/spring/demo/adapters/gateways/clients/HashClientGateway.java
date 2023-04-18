@@ -1,30 +1,26 @@
 package com.template.spring.demo.adapters.gateways.clients;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.template.spring.demo.application.interfaces.ports.HashGateway;
+import com.template.spring.demo.application.interfaces.ports.hash.HashGateway;
 
-import java.util.Objects;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import java.security.SecureRandom;
+import java.security.SecureRandom;
 
 @Service
 public class HashClientGateway implements HashGateway {
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10, new SecureRandom());
+
     @Override
     public String hashValue(String value){
-        return new StringBuilder(value).reverse().toString();
-//        int strength = 10; // work factor of bcrypt
-//        BCryptPasswordEncoder bCryptPasswordEncoder =
-//                new BCryptPasswordEncoder(strength, new SecureRandom());
-//        String encodedPassword = bCryptPasswordEncoder.encode(password);
-//
-//        return encodedPassword;
+        String encodedValue = bCryptPasswordEncoder.encode(value);
+
+        return encodedValue;
     }
 
     @Override
     public boolean compareHash(String value, String hash) {
-        String hashValue = this.hashValue(value);
+        boolean isValueEqualsHash = bCryptPasswordEncoder.matches(value, hash);
 
-        boolean isValueEqualsHash = Objects.equals(hashValue, hash);
         return isValueEqualsHash;
     }
 }

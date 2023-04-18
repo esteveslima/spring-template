@@ -2,7 +2,7 @@ package com.template.spring.demo.domain.repositories.user.dtos;
 
 import lombok.Data;
 
-public class UserGatewayGetUserDTO {
+public class UserGatewayGetUserByUsernameDTO {
     @Data
     public static class Params {
         public final String username;

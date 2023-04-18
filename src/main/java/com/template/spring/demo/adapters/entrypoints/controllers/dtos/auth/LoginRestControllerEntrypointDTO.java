@@ -19,7 +19,7 @@ public class LoginRestControllerEntrypointDTO {
     public class Response {
         @Data
         public static class Body {
-            public final String authToken;
+            public final String token;
         }
     }
 

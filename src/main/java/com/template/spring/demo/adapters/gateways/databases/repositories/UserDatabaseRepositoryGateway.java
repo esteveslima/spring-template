@@ -1,11 +1,11 @@
 package com.template.spring.demo.adapters.gateways.databases.repositories;
 
 import com.template.spring.demo.adapters.gateways.databases.models.UserEntityDatabaseModel;
-import com.template.spring.demo.application.interfaces.ports.HashGateway;
+import com.template.spring.demo.application.interfaces.ports.hash.HashGateway;
 import com.template.spring.demo.domain.exceptions.user.UserAlreadyExistsException;
 import com.template.spring.demo.domain.exceptions.user.UserNotFoundException;
 import com.template.spring.demo.domain.repositories.user.UserGateway;
-import com.template.spring.demo.domain.repositories.user.dtos.UserGatewayGetUserDTO;
+import com.template.spring.demo.domain.repositories.user.dtos.UserGatewayGetUserByUsernameDTO;
 import com.template.spring.demo.domain.repositories.user.dtos.UserGatewayRegisterUserDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -55,7 +55,7 @@ public class UserDatabaseRepositoryGateway implements UserGateway  {
     }
 
     @Override
-    public UserGatewayGetUserDTO.Result getUserByUsername(UserGatewayGetUserDTO.Params params) throws UserNotFoundException {
+    public UserGatewayGetUserByUsernameDTO.Result getUserByUsername(UserGatewayGetUserByUsernameDTO.Params params) throws UserNotFoundException {
         TypedQuery<UserEntityDatabaseModel> query = entityManager.createQuery(
                 "SELECT users FROM UserEntityDatabaseModel as users WHERE users.username = :usernameValue",
                 UserEntityDatabaseModel.class
@@ -64,7 +64,7 @@ public class UserDatabaseRepositoryGateway implements UserGateway  {
         try{
             UserEntityDatabaseModel resultObj = query.getSingleResult();
 
-            return new UserGatewayGetUserDTO.Result(
+            return new UserGatewayGetUserByUsernameDTO.Result(
                     resultObj.id,
                     resultObj.username,
                     resultObj.email,

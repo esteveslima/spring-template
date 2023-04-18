@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LogPayload {
+public class LogPayloadDTO {
     public EnumLogOperationLevel level;
     public String context;
     public String operation;

@@ -2,12 +2,11 @@ package com.template.spring.demo.adapters.gateways.clients;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.template.spring.demo.application.interfaces.ports.LogGateway;
+import com.template.spring.demo.application.interfaces.ports.log.LogGateway;
 import com.template.spring.demo.infrastructure.annotations.DisableAOP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.RequestScope;
 
 //import java.util.Random;
 //import java.util.UUID;

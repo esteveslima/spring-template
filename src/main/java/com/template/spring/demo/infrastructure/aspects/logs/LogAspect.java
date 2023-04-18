@@ -1,7 +1,7 @@
 package com.template.spring.demo.infrastructure.aspects.logs;
 
-import com.template.spring.demo.application.interfaces.ports.LogGateway;
-import com.template.spring.demo.infrastructure.interfaces.dtos.log_payload.LogPayload;
+import com.template.spring.demo.application.interfaces.ports.log.LogGateway;
+import com.template.spring.demo.infrastructure.interfaces.dtos.log_payload.LogPayloadDTO;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class LogAspect {
         Object params = joinPoint.getArgs();
         long startTime = System.currentTimeMillis();
 
-        LogPayload logPayload = new LogPayload();
+        LogPayloadDTO logPayload = new LogPayloadDTO();
         logPayload.setContext(context);
         logPayload.setOperation(operation);
         logPayload.setParams(params);
@@ -53,7 +53,7 @@ public class LogAspect {
             long executionTime = System.currentTimeMillis() - startTime;
             Map details = new HashMap<String, Object>();
 
-            logPayload.setLevel(LogPayload.EnumLogOperationLevel.SUCCESS);
+            logPayload.setLevel(LogPayloadDTO.EnumLogOperationLevel.SUCCESS);
             logPayload.setResult(result);
             logPayload.setExecutionTime(executionTime);
             logPayload.setDetails(details);
@@ -74,7 +74,7 @@ public class LogAspect {
                 details.put("exceptionPayload", optionalPayload.get());
             }
 
-            logPayload.setLevel(LogPayload.EnumLogOperationLevel.ERROR);
+            logPayload.setLevel(LogPayloadDTO.EnumLogOperationLevel.ERROR);
             logPayload.setResult(result);
             logPayload.setExecutionTime(executionTime);
             logPayload.setDetails(details);

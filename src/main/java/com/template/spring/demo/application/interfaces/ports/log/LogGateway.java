@@ -1,4 +1,4 @@
-package com.template.spring.demo.application.interfaces.ports;
+package com.template.spring.demo.application.interfaces.ports.log;
 
 public interface LogGateway {
     public void log(Object payloadMessage);
