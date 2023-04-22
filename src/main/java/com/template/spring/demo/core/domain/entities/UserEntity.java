@@ -24,26 +24,12 @@ public class UserEntity {
     @Column(name = "encoded_password")
     public String encodedPassword;
 
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    public EnumUserRole role;
-
-    public enum EnumUserRole {
-        USER,
-        STORE;
-
-        public class MapValue {
-            public static final String USER = "USER";
-            public static final String STORE = "STORE";
-        }
-    }
-
     //
 
     public UserEntity() {
     }
 
-    public UserEntity(String username, String email, String encodedPassword, EnumUserRole role) {
+    public UserEntity(String username, String email, String encodedPassword) {
         UserEntity.validateUsername(username);
         UserEntity.validateEmail(email);
 
@@ -51,7 +37,10 @@ public class UserEntity {
         this.username = username;
         this.email = email;
         this.encodedPassword = encodedPassword;
-        this.role = role;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setUsername(String username) {
@@ -67,11 +56,6 @@ public class UserEntity {
     public void setEncodedPassword(String encodedPassword) {
         this.encodedPassword = encodedPassword;
     }
-
-    public void setRole(EnumUserRole role) {
-        this.role = role;
-    }
-
 
 
     //

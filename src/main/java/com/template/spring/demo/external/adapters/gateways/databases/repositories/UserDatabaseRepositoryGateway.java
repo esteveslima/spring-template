@@ -37,6 +37,21 @@ public class UserDatabaseRepositoryGateway implements UserRepository {
     }
 
     @Override
+    public UserEntity getUserById(int id) throws UserNotFoundException {
+        String query = "SELECT users FROM UserEntity users WHERE users.id = :idValue";
+        TypedQuery<UserEntity> typedQuery = entityManager.createQuery(query,UserEntity.class)
+                .setParameter("idValue", id);
+
+        try{
+            UserEntity result = typedQuery.getSingleResult();
+
+            return result;
+        } catch(NoResultException exception) {
+            throw new UserNotFoundException(Integer.toString(id), exception);
+        }
+    }
+
+    @Override
     public UserEntity getUserByUsername(String username) throws UserNotFoundException {
         String query = "SELECT users FROM UserEntity users WHERE users.username = :usernameValue";
         TypedQuery<UserEntity> typedQuery = entityManager.createQuery(query,UserEntity.class)

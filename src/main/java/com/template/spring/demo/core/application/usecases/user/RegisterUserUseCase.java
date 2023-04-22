@@ -24,7 +24,7 @@ public class RegisterUserUseCase {
     @Transactional // TODO: fully decouple usecase from DB annotation by implementing the unit of work pattern
     public RegisterUserUseCaseDTO.Result execute(RegisterUserUseCaseDTO.Params params) {
         String encodedPassword = this.hashGateway.hashValue(params.password);
-        UserEntity newUser = new UserEntity(params.username, params.email, encodedPassword, UserEntity.EnumUserRole.USER);
+        UserEntity newUser = new UserEntity(params.username, params.email, encodedPassword);
 
         UserEntity registeredUser = this.userRepository.registerUser(newUser);
 

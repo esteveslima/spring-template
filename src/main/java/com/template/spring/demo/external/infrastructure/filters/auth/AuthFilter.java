@@ -2,7 +2,8 @@ package com.template.spring.demo.external.infrastructure.filters.auth;
 
 import com.template.spring.demo.core.application.exceptions.token.InvalidTokenException;
 import com.template.spring.demo.core.application.interfaces.ports.token.TokenGateway;
-import com.template.spring.demo.core.application.interfaces.ports.token.TokenPayloadDTO;
+import com.template.spring.demo.core.application.interfaces.auth.AuthTokenPayloadDTO;
+import com.template.spring.demo.core.domain.entities.UserEntity;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ import java.util.*;
 @Component // Follows the Spring security filters order(?)
 public class AuthFilter extends OncePerRequestFilter {
 
-    @Autowired private TokenGateway tokenGateway;
+    @Autowired private TokenGateway<AuthTokenPayloadDTO> tokenGateway;
 
     @Override
     protected void doFilterInternal(
@@ -46,7 +47,7 @@ public class AuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        TokenPayloadDTO decodedTokenPayloadDTO;
+        AuthTokenPayloadDTO decodedTokenPayloadDTO;
         try{
             final String jwtToken = authorizationHeader.split(" ")[1].trim();
             decodedTokenPayloadDTO = this.tokenGateway.decodeToken(jwtToken);
@@ -56,15 +57,13 @@ public class AuthFilter extends OncePerRequestFilter {
         }
 
         // Set user for spring security context and authentication method
-        String principal = decodedTokenPayloadDTO.username;
-        String credentials = null;
+        UserEntity authUser = new UserEntity();
+        authUser.setId(decodedTokenPayloadDTO.id);
+        Object principal = authUser;
+        Object credentials = null;
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(decodedTokenPayloadDTO.role.name()));
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                principal,
-                credentials,
-                authorities
-        );
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(principal, credentials, authorities);
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 

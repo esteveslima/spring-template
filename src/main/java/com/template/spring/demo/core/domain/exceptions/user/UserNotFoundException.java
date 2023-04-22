@@ -1,7 +1,7 @@
 package com.template.spring.demo.core.domain.exceptions.user;
 
 public class UserNotFoundException extends RuntimeException {
-    public final String payload;
+    public final Object payload;
 
     public UserNotFoundException() {
         super();

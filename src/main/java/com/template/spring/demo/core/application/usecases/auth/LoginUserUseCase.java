@@ -4,7 +4,7 @@ import com.template.spring.demo.core.application.interfaces.ports.hash.HashGatew
 import com.template.spring.demo.core.application.exceptions.auth.UnauthorizedException;
 import com.template.spring.demo.core.application.interfaces.dtos.usecases.auth.LoginUseCaseDTO;
 import com.template.spring.demo.core.application.interfaces.ports.token.TokenGateway;
-import com.template.spring.demo.core.application.interfaces.ports.token.TokenPayloadDTO;
+import com.template.spring.demo.core.application.interfaces.auth.AuthTokenPayloadDTO;
 import com.template.spring.demo.core.domain.entities.UserEntity;
 import com.template.spring.demo.core.domain.repositories.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class LoginUseCase {
+public class LoginUserUseCase {
 
     private UserRepository userRepository;
     private HashGateway hashGateway;
-    private TokenGateway tokenGateway;
+    private TokenGateway<AuthTokenPayloadDTO> tokenGateway;
 
     @Autowired
-    public LoginUseCase(UserRepository userRepository, HashGateway hashGateway, TokenGateway tokenGateway) {
+    public LoginUserUseCase(UserRepository userRepository, HashGateway hashGateway, TokenGateway<AuthTokenPayloadDTO> tokenGateway) {
         this.userRepository = userRepository;
         this.hashGateway = hashGateway;
         this.tokenGateway = tokenGateway;
@@ -33,8 +33,8 @@ public class LoginUseCase {
             throw new UnauthorizedException(params);
         }
 
-        TokenPayloadDTO tokenPayload = new TokenPayloadDTO(user.username,UserEntity.EnumUserRole.USER);
-        String authToken = this.tokenGateway.generateToken(tokenPayload);
+        AuthTokenPayloadDTO authTokenPayload = new AuthTokenPayloadDTO(user.id, AuthTokenPayloadDTO.AuthRoleEnum.USER);
+        String authToken = this.tokenGateway.generateToken(authTokenPayload);
 
         return new LoginUseCaseDTO.Result(authToken);
     }

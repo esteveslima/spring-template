@@ -6,5 +6,6 @@ import com.template.spring.demo.core.domain.exceptions.user.UserAlreadyExistsExc
 
 public interface UserRepository {
     public UserEntity registerUser(UserEntity user) throws UserAlreadyExistsException;
+    public UserEntity getUserById(int id) throws UserNotFoundException;
     public UserEntity getUserByUsername(String username) throws UserNotFoundException;
 }

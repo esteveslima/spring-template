@@ -3,7 +3,7 @@ package com.template.spring.demo.external.adapters.entrypoints.controllers;
 import com.template.spring.demo.external.adapters.entrypoints.controllers.dtos.auth.LoginRestControllerEntrypointDTO;
 import com.template.spring.demo.core.application.exceptions.auth.UnauthorizedException;
 import com.template.spring.demo.core.application.interfaces.dtos.usecases.auth.LoginUseCaseDTO;
-import com.template.spring.demo.core.application.usecases.auth.LoginUseCase;
+import com.template.spring.demo.core.application.usecases.auth.LoginUserUseCase;
 import com.template.spring.demo.core.domain.exceptions.user.UserNotFoundException;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/auth")
 public class AuthControllerEntrypoint {
 
-    @Autowired private LoginUseCase loginUseCase;
+    @Autowired private LoginUserUseCase loginUserUseCase;
 
 
     @PostMapping("/login")
@@ -29,7 +29,7 @@ public class AuthControllerEntrypoint {
         try{
             LoginUseCaseDTO.Params useCaseParamsDTO = new LoginUseCaseDTO.Params(requestBody.username, requestBody.password);
 
-            LoginUseCaseDTO.Result useCaseResultDTO = loginUseCase.execute(useCaseParamsDTO);
+            LoginUseCaseDTO.Result useCaseResultDTO = loginUserUseCase.execute(useCaseParamsDTO);
 
             return new LoginRestControllerEntrypointDTO.Response.Body(useCaseResultDTO.token);
         } catch (UserNotFoundException exception){
