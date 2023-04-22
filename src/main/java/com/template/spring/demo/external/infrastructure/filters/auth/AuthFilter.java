@@ -56,10 +56,8 @@ public class AuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Set user for spring security context and authentication method
-        UserEntity authUser = new UserEntity();
-        authUser.setId(decodedTokenPayloadDTO.id);
-        Object principal = authUser;
+        // Set auth user data for spring security context and authentication
+        Object principal = decodedTokenPayloadDTO;
         Object credentials = null;
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(decodedTokenPayloadDTO.role.name()));
 

@@ -3,9 +3,8 @@ package com.template.spring.demo.core.application.usecases.user;
 import com.template.spring.demo.core.application.interfaces.dtos.usecases.user.RegisterUserUseCaseDTO;
 import com.template.spring.demo.core.application.interfaces.ports.hash.HashGateway;
 import com.template.spring.demo.core.domain.entities.UserEntity;
-import com.template.spring.demo.core.domain.repositories.user.UserRepository;
+import com.template.spring.demo.core.domain.repositories.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +27,6 @@ public class RegisterUserUseCase {
 
         UserEntity registeredUser = this.userRepository.registerUser(newUser);
 
-        return new RegisterUserUseCaseDTO.Result(registeredUser.username, registeredUser.email, registeredUser.id);
+        return new RegisterUserUseCaseDTO.Result(registeredUser.getId(), registeredUser.getUsername(), registeredUser.getEmail());
     }
 }

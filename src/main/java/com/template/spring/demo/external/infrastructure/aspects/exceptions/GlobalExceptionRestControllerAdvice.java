@@ -3,6 +3,7 @@ package com.template.spring.demo.external.infrastructure.aspects.exceptions;
 import com.template.spring.demo.core.application.interfaces.ports.log.LogGateway;
 import com.template.spring.demo.external.infrastructure.interfaces.dtos.error_response.ErrorResponseHttpDTO;
 import com.template.spring.demo.external.infrastructure.interfaces.dtos.log_payload.LogPayloadDTO;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,10 +39,24 @@ public class GlobalExceptionRestControllerAdvice {
     //
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    private ResponseEntity<ErrorResponseHttpDTO> handleBadRequestException(MethodArgumentNotValidException exception) {
+    private ResponseEntity<ErrorResponseHttpDTO> handleBadRequestBodyException(MethodArgumentNotValidException exception) {
         List<String> errorMessages = exception.getBindingResult().getFieldErrors().stream()
                 .map((error) -> String.format("Field '%s' error: %s", error.getField(), error.getDefaultMessage()))
                 .collect(Collectors.toList());
+
+        ErrorResponseHttpDTO errorResponseHttp = new ErrorResponseHttpDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                errorMessages
+        );
+
+        return ResponseEntity.status(errorResponseHttp.status).body(errorResponseHttp);
+    }
+
+    @ExceptionHandler(value = ConstraintViolationException.class)   // exclusively added for path/query params validation in controllers
+    private ResponseEntity<ErrorResponseHttpDTO> handleBadRequestParamsException(ConstraintViolationException exception) {
+        List<String> errorMessages = new ArrayList<String>();
+        errorMessages.add(exception.getMessage());
 
         ErrorResponseHttpDTO errorResponseHttp = new ErrorResponseHttpDTO(
                 HttpStatus.BAD_REQUEST.value(),

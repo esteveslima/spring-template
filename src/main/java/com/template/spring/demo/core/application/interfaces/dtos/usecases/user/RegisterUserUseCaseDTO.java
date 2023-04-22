@@ -12,8 +12,8 @@ public class RegisterUserUseCaseDTO {
 
     @Data
     public static class Result {
+        public final int id;
         public final String username;
         public final String email;
-        public final int id;
     }
 }

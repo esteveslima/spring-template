@@ -4,10 +4,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.template.spring.demo.core.application.exceptions.token.InvalidTokenException;
+import com.template.spring.demo.core.application.interfaces.auth.AuthTokenPayloadDTO;
 import com.template.spring.demo.core.application.interfaces.ports.token.TokenGateway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,14 +18,14 @@ import java.util.Date;
 import java.util.Map;
 
 @Component
-public class TokenClientGateway<T> implements TokenGateway<T> {
+public class TokenClientGateway implements TokenGateway<AuthTokenPayloadDTO>{
 
 
     @Value("${JWT_SECRET}") private String jwtSecret;
     @Value("${JWT_EXPIRES_SECONDS}") private String jwtExpiresSeconds;
 
     @Override
-    public T decodeToken(String token) throws InvalidTokenException {
+    public AuthTokenPayloadDTO decodeToken(String token) throws InvalidTokenException {
         try {
             DecodedJWT decodedJWT = JWT
                     .require(Algorithm.HMAC256(this.jwtSecret))
@@ -39,7 +39,7 @@ public class TokenClientGateway<T> implements TokenGateway<T> {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             Map<String, Object> payloadMap = objectMapper.readValue(stringifiedPayload, Map.class);
-            T tokenPayload = objectMapper.convertValue(payloadMap, new TypeReference<T>(){});
+            AuthTokenPayloadDTO tokenPayload = objectMapper.convertValue(payloadMap, AuthTokenPayloadDTO.class);
 
             return tokenPayload;
         } catch(JWTVerificationException exception) {
@@ -50,7 +50,7 @@ public class TokenClientGateway<T> implements TokenGateway<T> {
     }
 
     @Override
-    public String generateToken(T tokenPayload) {
+    public String generateToken(AuthTokenPayloadDTO tokenPayload) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.SECOND, Integer.parseInt(this.jwtExpiresSeconds));

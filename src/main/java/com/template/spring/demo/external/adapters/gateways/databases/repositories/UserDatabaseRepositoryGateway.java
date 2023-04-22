@@ -3,12 +3,11 @@ package com.template.spring.demo.external.adapters.gateways.databases.repositori
 import com.template.spring.demo.core.domain.entities.UserEntity;
 import com.template.spring.demo.core.domain.exceptions.user.UserAlreadyExistsException;
 import com.template.spring.demo.core.domain.exceptions.user.UserNotFoundException;
-import com.template.spring.demo.core.domain.repositories.user.UserRepository;
+import com.template.spring.demo.core.domain.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,23 +22,23 @@ public class UserDatabaseRepositoryGateway implements UserRepository {
     }
 
     @Override
-    public UserEntity registerUser(UserEntity user) throws UserAlreadyExistsException {
+    public UserEntity registerUser(UserEntity entity) throws UserAlreadyExistsException {
         int idInsertOperation = 0;
-        user.id = idInsertOperation;
+        entity.setId(idInsertOperation);
 
         try {
-            UserEntity result = this.entityManager.merge(user);
+            UserEntity result = this.entityManager.merge(entity);
 
             return result;
         } catch(PersistenceException exception) {
-            throw new UserAlreadyExistsException(user, exception);
+            throw new UserAlreadyExistsException(entity, exception);
         }
     }
 
     @Override
     public UserEntity getUserById(int id) throws UserNotFoundException {
-        String query = "SELECT users FROM UserEntity users WHERE users.id = :idValue";
-        TypedQuery<UserEntity> typedQuery = entityManager.createQuery(query,UserEntity.class)
+        String jpqlQuery = "SELECT users FROM UserEntity users WHERE users.id = :idValue";
+        TypedQuery<UserEntity> typedQuery = entityManager.createQuery(jpqlQuery,UserEntity.class)
                 .setParameter("idValue", id);
 
         try{
@@ -53,8 +52,8 @@ public class UserDatabaseRepositoryGateway implements UserRepository {
 
     @Override
     public UserEntity getUserByUsername(String username) throws UserNotFoundException {
-        String query = "SELECT users FROM UserEntity users WHERE users.username = :usernameValue";
-        TypedQuery<UserEntity> typedQuery = entityManager.createQuery(query,UserEntity.class)
+        String jpqlQuery = "SELECT users FROM UserEntity users WHERE users.username = :usernameValue";
+        TypedQuery<UserEntity> typedQuery = entityManager.createQuery(jpqlQuery,UserEntity.class)
                 .setParameter("usernameValue", username);
 
         try{

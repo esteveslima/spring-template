@@ -2,32 +2,33 @@ package com.template.spring.demo.core.domain.entities;
 
 import com.template.spring.demo.core.domain.exceptions.user.UserFieldFailedValidationException;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+@Data
+@NoArgsConstructor
 @Entity @Table(name = "users")  // TODO: Find a way to separate DB annotations from domain entities or ensure a data mapper is stable and performant(had a separated model class, changed ORM annotations to entity to avoid having mappings on repositories)
 public class UserEntity {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
-    public int id;
+    private int id;
 
     @Column(name = "username", unique = true)
-    public String username;
+    private String username;
 
     @Column(name = "email", unique = true)
-    public String email;
+    private String email;
 
     @Column(name = "encoded_password")
-    public String encodedPassword;
+    private String encodedPassword;
 
     //
-
-    public UserEntity() {
-    }
 
     public UserEntity(String username, String email, String encodedPassword) {
         UserEntity.validateUsername(username);
@@ -39,10 +40,6 @@ public class UserEntity {
         this.encodedPassword = encodedPassword;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setUsername(String username) {
         UserEntity.validateUsername(username);
         this.username = username;
@@ -52,11 +49,6 @@ public class UserEntity {
         UserEntity.validateEmail(email);
         this.email = email;
     }
-
-    public void setEncodedPassword(String encodedPassword) {
-        this.encodedPassword = encodedPassword;
-    }
-
 
     //
 
