@@ -1,5 +1,7 @@
 package com.template.spring.demo.core.domain.exceptions.store;
 
+// TODO: make all custom exceptions checked exceptions so they are handled at the controller level with a proper response
+// TODO: create iterface for usecases(?)
 public class StoreAlreadyExistsException extends RuntimeException {
     public final Object payload;
 

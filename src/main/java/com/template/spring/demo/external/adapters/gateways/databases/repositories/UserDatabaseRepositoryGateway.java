@@ -38,6 +38,7 @@ public class UserDatabaseRepositoryGateway implements UserRepository {
     @Override
     public UserEntity getUserById(int id) throws UserNotFoundException {
         String jpqlQuery = "SELECT users FROM UserEntity users WHERE users.id = :idValue";
+
         TypedQuery<UserEntity> typedQuery = entityManager.createQuery(jpqlQuery,UserEntity.class)
                 .setParameter("idValue", id);
 
@@ -53,6 +54,7 @@ public class UserDatabaseRepositoryGateway implements UserRepository {
     @Override
     public UserEntity getUserByUsername(String username) throws UserNotFoundException {
         String jpqlQuery = "SELECT users FROM UserEntity users WHERE users.username = :usernameValue";
+
         TypedQuery<UserEntity> typedQuery = entityManager.createQuery(jpqlQuery,UserEntity.class)
                 .setParameter("usernameValue", username);
 

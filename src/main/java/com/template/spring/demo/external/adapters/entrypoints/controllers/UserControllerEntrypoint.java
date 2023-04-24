@@ -2,7 +2,7 @@ package com.template.spring.demo.external.adapters.entrypoints.controllers;
 
 import com.template.spring.demo.core.domain.exceptions.user.UserFieldFailedValidationException;
 import com.template.spring.demo.external.adapters.entrypoints.controllers.dtos.user.RegisterUserRestControllerEntrypointDTO;
-import com.template.spring.demo.core.application.interfaces.dtos.usecases.user.RegisterUserUseCaseDTO;
+import com.template.spring.demo.core.application.interfaces.usecases.dtos.user.RegisterUserUseCaseDTO;
 import com.template.spring.demo.core.application.usecases.user.RegisterUserUseCase;
 import com.template.spring.demo.core.domain.exceptions.user.UserAlreadyExistsException;
 import jakarta.annotation.security.PermitAll;
@@ -17,6 +17,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserControllerEntrypoint {
 
     @Autowired private RegisterUserUseCase registerUserUseCase;
+
+    //
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)

@@ -7,12 +7,12 @@ public class StoreNotFoundException extends RuntimeException {
         super();
         this.payload = null;
     }
-    public StoreNotFoundException(String payload) {
+    public StoreNotFoundException(Object payload) {
         super();
         this.payload = payload;
     }
 
-    public StoreNotFoundException(String payload, Throwable cause) {
+    public StoreNotFoundException(Object payload, Throwable cause) {
         super(cause);
         this.payload = payload;
     }

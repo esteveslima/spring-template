@@ -7,13 +7,18 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.util.StringUtils;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,7 +59,51 @@ public class GlobalExceptionRestControllerAdvice {
     }
 
     @ExceptionHandler(value = ConstraintViolationException.class)   // exclusively added for path/query params validation in controllers
-    private ResponseEntity<ErrorResponseHttpDTO> handleBadRequestParamsException(ConstraintViolationException exception) {
+    private ResponseEntity<ErrorResponseHttpDTO> handleBadRequestParamsValidationException(ConstraintViolationException exception) {
+        List<String> errorMessages = new ArrayList<String>();
+        errorMessages.add(exception.getMessage());
+
+        ErrorResponseHttpDTO errorResponseHttp = new ErrorResponseHttpDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                errorMessages
+        );
+
+        return ResponseEntity.status(errorResponseHttp.status).body(errorResponseHttp);
+    }
+
+    @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
+    private ResponseEntity<ErrorResponseHttpDTO> handleBadRequestParamsException(MethodArgumentTypeMismatchException exception) {
+        List<String> errorMessages = new ArrayList<String>();
+        String exceptionUsefulMessage = String.join(",", Arrays.stream(exception.getMessage().split(";")).skip(1).toList());
+        errorMessages.add(exceptionUsefulMessage);
+
+        ErrorResponseHttpDTO errorResponseHttp = new ErrorResponseHttpDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                errorMessages
+        );
+
+        return ResponseEntity.status(errorResponseHttp.status).body(errorResponseHttp);
+    }
+
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    private ResponseEntity<ErrorResponseHttpDTO> handleBadRequestContentException(HttpMessageNotReadableException exception) {
+        List<String> errorMessages = new ArrayList<String>();
+        String exceptionUsefulMessage = String.join(",", Arrays.stream(exception.getMessage().split(":")).skip(2).toList());
+        errorMessages.add(exceptionUsefulMessage);
+
+        ErrorResponseHttpDTO errorResponseHttp = new ErrorResponseHttpDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                errorMessages
+        );
+
+        return ResponseEntity.status(errorResponseHttp.status).body(errorResponseHttp);
+    }
+
+    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+    private ResponseEntity<ErrorResponseHttpDTO> handleBadRequestMethodException(HttpRequestMethodNotSupportedException exception) {
         List<String> errorMessages = new ArrayList<String>();
         errorMessages.add(exception.getMessage());
 
@@ -88,7 +137,7 @@ public class GlobalExceptionRestControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     private ResponseEntity<ErrorResponseHttpDTO> handleAnyException(Exception exception) {
-        this.logUnknownException(exception);
+        this.logger.error(exception.getMessage()); // Probably a good idea to log the unknown exception
 
         List<String> errorMessages = new ArrayList<String>();
         errorMessages.add(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
@@ -102,14 +151,5 @@ public class GlobalExceptionRestControllerAdvice {
         return ResponseEntity.status(errorResponseHttp.status).body(errorResponseHttp);
     }
 
-    private void logUnknownException(Exception exception){
-        // Probably a good idea to log the unknown exception
-        LogPayloadDTO logPayloadDTO = new LogPayloadDTO();
-        logPayloadDTO.level = LogPayloadDTO.EnumLogOperationLevel.ERROR;
-        logPayloadDTO.context = "EXCEPTION";
-        logPayloadDTO.result = exception.toString();
-        logPayloadDTO.startTime = System.currentTimeMillis();
-        this.logger.error(logPayloadDTO);
-    }
 
 }

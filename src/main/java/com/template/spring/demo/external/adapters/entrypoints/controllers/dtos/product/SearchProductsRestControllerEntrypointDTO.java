@@ -1,14 +1,12 @@
-package com.template.spring.demo.external.adapters.entrypoints.controllers.dtos.store;
+package com.template.spring.demo.external.adapters.entrypoints.controllers.dtos.product;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import com.template.spring.demo.core.domain.entities.ProductEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
 
-public class SearchStoresRestControllerEntrypointDTO {
+public class SearchProductsRestControllerEntrypointDTO {
 
 //    public class Request {
 //
@@ -17,6 +15,9 @@ public class SearchStoresRestControllerEntrypointDTO {
 //        public static class Query {
 //            @NotBlank
 //            public String searchQuery;
+//
+//            @NotNull
+//            public String storeId;
 //
 //            @NotNull
 //            @Size(min = 1, max = 10)
@@ -32,14 +33,17 @@ public class SearchStoresRestControllerEntrypointDTO {
         @Data
         @AllArgsConstructor
         public static class Body {
-            public List<ResultItem> stores;
+            public List<ResultItem> products;
 
             @Data
             @AllArgsConstructor
             public static class ResultItem {
-                public int id;
-                public int userId;
-                public String name;
+                public final int id;
+                public final int storeId;
+                public final String name;
+                public final String description;
+                public final double price;
+                public final ProductEntity.CurrencyEnum currency;
             }
         }
     }

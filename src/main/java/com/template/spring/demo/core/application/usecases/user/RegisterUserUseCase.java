@@ -1,10 +1,10 @@
 package com.template.spring.demo.core.application.usecases.user;
 
-import com.template.spring.demo.core.application.interfaces.dtos.usecases.user.RegisterUserUseCaseDTO;
+import com.template.spring.demo.core.application.interfaces.usecases.dtos.user.RegisterUserUseCaseDTO;
 import com.template.spring.demo.core.application.interfaces.ports.hash.HashGateway;
 import com.template.spring.demo.core.domain.entities.UserEntity;
 import com.template.spring.demo.core.domain.repositories.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,12 +1,12 @@
 package com.template.spring.demo.external.adapters.entrypoints.controllers;
 
-import com.template.spring.demo.core.application.interfaces.dtos.usecases.auth.LoginStoreUseCaseDTO;
+import com.template.spring.demo.core.application.interfaces.usecases.dtos.auth.LoginStoreUseCaseDTO;
 import com.template.spring.demo.core.application.usecases.auth.LoginStoreUseCase;
 import com.template.spring.demo.core.domain.exceptions.store.StoreNotFoundException;
 import com.template.spring.demo.external.adapters.entrypoints.controllers.dtos.auth.LoginStoreRestControllerEntrypointDTO;
 import com.template.spring.demo.external.adapters.entrypoints.controllers.dtos.auth.LoginUserRestControllerEntrypointDTO;
-import com.template.spring.demo.core.application.exceptions.auth.UnauthorizedException;
-import com.template.spring.demo.core.application.interfaces.dtos.usecases.auth.LoginUserUseCaseDTO;
+import com.template.spring.demo.core.application.exceptions.usecases.auth.UnauthorizedException;
+import com.template.spring.demo.core.application.interfaces.usecases.dtos.auth.LoginUserUseCaseDTO;
 import com.template.spring.demo.core.application.usecases.auth.LoginUserUseCase;
 import com.template.spring.demo.core.domain.exceptions.user.UserNotFoundException;
 import jakarta.annotation.security.PermitAll;
@@ -22,6 +22,8 @@ public class AuthControllerEntrypoint {
 
     @Autowired private LoginUserUseCase loginUserUseCase;
     @Autowired private LoginStoreUseCase loginStoreUseCase;
+
+    //
 
     @PostMapping("/login/user")
     @ResponseStatus(HttpStatus.OK)

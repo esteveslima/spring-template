@@ -1,4 +1,4 @@
-package com.template.spring.demo.core.application.interfaces.dtos.usecases.user;
+package com.template.spring.demo.core.application.interfaces.usecases.dtos.user;
 
 import lombok.Data;
 

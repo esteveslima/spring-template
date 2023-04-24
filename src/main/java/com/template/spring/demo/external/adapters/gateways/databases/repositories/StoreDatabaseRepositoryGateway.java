@@ -41,6 +41,7 @@ public class StoreDatabaseRepositoryGateway implements StoreRepository {
     @Override
     public StoreEntity getStoreById(int id) throws StoreNotFoundException {
         String jpqlQuery = "SELECT stores FROM StoreEntity stores WHERE stores.id = :idValue";
+
         TypedQuery<StoreEntity> typedQuery = entityManager.createQuery(jpqlQuery,StoreEntity.class)
                 .setParameter("idValue", id);
 
@@ -49,22 +50,23 @@ public class StoreDatabaseRepositoryGateway implements StoreRepository {
 
             return result;
         } catch(NoResultException exception) {
-            throw new StoreNotFoundException(Integer.toString(id), exception);
+            throw new StoreNotFoundException(id, exception);
         }
     }
 
     @Override
-    public StoreEntity getStoreByUserId(int id) throws StoreNotFoundException {
+    public StoreEntity getStoreByUserId(int userId) throws StoreNotFoundException {
         String jpqlQuery = "SELECT stores FROM StoreEntity stores JOIN stores.user users WHERE users.id = :userIdValue";
+
         TypedQuery<StoreEntity> typedQuery = entityManager.createQuery(jpqlQuery,StoreEntity.class)
-                .setParameter("userIdValue", id);
+                .setParameter("userIdValue", userId);
 
         try{
             StoreEntity result = typedQuery.getSingleResult();
 
             return result;
         } catch(NoResultException exception) {
-            throw new StoreNotFoundException(Integer.toString(id), exception);
+            throw new StoreNotFoundException(userId, exception);
         }
     }
 
@@ -73,9 +75,10 @@ public class StoreDatabaseRepositoryGateway implements StoreRepository {
         if(limit <= 0) { limit = 10; }
         if(offset <= 0) { offset = 0; }
 
+        String jpqlQuery = "SELECT stores FROM StoreEntity stores WHERE stores.name LIKE :searchQuery";
+
         String searchQueryWithWildcard = "%" + searchQuery + "%";
 
-        String jpqlQuery = "SELECT stores FROM StoreEntity stores WHERE stores.name LIKE :searchQuery";
         TypedQuery<StoreEntity> typedQuery = entityManager.createQuery(jpqlQuery,StoreEntity.class)
                 .setParameter("searchQuery", searchQueryWithWildcard)
                 .setMaxResults(limit)
@@ -93,7 +96,7 @@ public class StoreDatabaseRepositoryGateway implements StoreRepository {
 
             return result;
         } catch(NoResultException exception) {
-            throw new StoreNotFoundException(Integer.toString(entity.getId()), exception);
+            throw new StoreNotFoundException(entity.getId(), exception);
         } catch(PersistenceException exception) {
             throw new StoreAlreadyExistsException(entity, exception);
         }

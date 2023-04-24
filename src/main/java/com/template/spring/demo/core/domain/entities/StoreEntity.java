@@ -18,8 +18,8 @@ public class StoreEntity {
     @Column(name = "id", unique = true)
     private int id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @OneToOne(fetch = FetchType.LAZY)   // TODO: apparently lazy loading is not working properly, it's being loaded eagerly for some reason. It's possible to see the data in the debugger and logs
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
 
     @Column(name = "name")

@@ -7,7 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.template.spring.demo.core.application.exceptions.token.InvalidTokenException;
-import com.template.spring.demo.core.application.interfaces.auth.AuthTokenPayloadDTO;
+import com.template.spring.demo.core.application.interfaces.auth_token.AuthTokenPayloadDTO;
 import com.template.spring.demo.core.application.interfaces.ports.token.TokenGateway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

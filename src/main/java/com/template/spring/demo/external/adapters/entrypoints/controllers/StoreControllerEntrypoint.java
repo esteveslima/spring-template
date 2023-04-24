@@ -1,10 +1,10 @@
 package com.template.spring.demo.external.adapters.entrypoints.controllers;
 
-import com.template.spring.demo.core.application.interfaces.auth.AuthTokenPayloadDTO;
-import com.template.spring.demo.core.application.interfaces.dtos.usecases.store.GetStoreUseCaseDTO;
-import com.template.spring.demo.core.application.interfaces.dtos.usecases.store.ModifyStoreUseCaseDTO;
-import com.template.spring.demo.core.application.interfaces.dtos.usecases.store.RegisterStoreUseCaseDTO;
-import com.template.spring.demo.core.application.interfaces.dtos.usecases.store.SearchStoresUseCaseDTO;
+import com.template.spring.demo.core.application.interfaces.auth_token.AuthTokenPayloadDTO;
+import com.template.spring.demo.core.application.interfaces.usecases.dtos.store.GetStoreUseCaseDTO;
+import com.template.spring.demo.core.application.interfaces.usecases.dtos.store.ModifyStoreUseCaseDTO;
+import com.template.spring.demo.core.application.interfaces.usecases.dtos.store.RegisterStoreUseCaseDTO;
+import com.template.spring.demo.core.application.interfaces.usecases.dtos.store.SearchStoresUseCaseDTO;
 import com.template.spring.demo.core.application.usecases.store.GetStoreUseCase;
 import com.template.spring.demo.core.application.usecases.store.ModifyStoreUseCase;
 import com.template.spring.demo.core.application.usecases.store.RegisterStoreUseCase;
@@ -37,6 +37,8 @@ public class StoreControllerEntrypoint {
     @Autowired private SearchStoresUseCase searchStoresUseCase;
     @Autowired private ModifyStoreUseCase modifyStoreUseCase;
 
+    //
+
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -47,6 +49,7 @@ public class StoreControllerEntrypoint {
     ) {
         try {
             AuthTokenPayloadDTO authTokenPayload = (AuthTokenPayloadDTO) authentication.getPrincipal();
+
             RegisterStoreUseCaseDTO.Params useCaseParamsDTO = new RegisterStoreUseCaseDTO.Params(
                     authTokenPayload.userId,
                     new RegisterStoreUseCaseDTO.Params.Payload(
@@ -130,6 +133,7 @@ public class StoreControllerEntrypoint {
     ) {
         try {
             AuthTokenPayloadDTO authTokenPayload = (AuthTokenPayloadDTO) authentication.getPrincipal();
+
             ModifyStoreUseCaseDTO.Params useCaseParamsDTO = new ModifyStoreUseCaseDTO.Params(
                     authTokenPayload.userId,
                     new ModifyStoreUseCaseDTO.Params.Payload(

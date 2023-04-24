@@ -1,11 +1,11 @@
 package com.template.spring.demo.core.application.usecases.store;
 
-import com.template.spring.demo.core.application.interfaces.dtos.usecases.store.RegisterStoreUseCaseDTO;
+import com.template.spring.demo.core.application.interfaces.usecases.dtos.store.RegisterStoreUseCaseDTO;
 import com.template.spring.demo.core.domain.entities.StoreEntity;
 import com.template.spring.demo.core.domain.entities.UserEntity;
 import com.template.spring.demo.core.domain.repositories.StoreRepository;
 import com.template.spring.demo.core.domain.repositories.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +27,8 @@ public class RegisterStoreUseCase {
         // TODO: find a way to deep copy objects using setter methods without having to manually call them, making use of entities built in domain logic
         newStore.setName(params.payload.name);
 
-        UserEntity authUser = this.userRepository.getUserById(params.userId);
-        newStore.setUser(authUser);
+        UserEntity user = this.userRepository.getUserById(params.userId);
+        newStore.setUser(user);
 
         StoreEntity registeredStore = this.storeRepository.registerStore(newStore);
 

@@ -1,4 +1,4 @@
-package com.template.spring.demo.core.application.interfaces.auth;
+package com.template.spring.demo.core.application.interfaces.auth_token;
 
 
 // Not using lombok due to the usage and limitations of ObjectMapper.convertValue

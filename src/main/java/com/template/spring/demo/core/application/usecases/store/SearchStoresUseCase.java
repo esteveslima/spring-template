@@ -1,9 +1,8 @@
 package com.template.spring.demo.core.application.usecases.store;
 
-import com.template.spring.demo.core.application.interfaces.dtos.usecases.store.SearchStoresUseCaseDTO;
+import com.template.spring.demo.core.application.interfaces.usecases.dtos.store.SearchStoresUseCaseDTO;
 import com.template.spring.demo.core.domain.entities.StoreEntity;
 import com.template.spring.demo.core.domain.repositories.StoreRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,6 @@ public class SearchStoresUseCase {
         this.storeRepository = storeRepository;
     }
 
-    @Transactional // TODO: fully decouple usecase from DB annotation by implementing the unit of work pattern
     public SearchStoresUseCaseDTO.Result execute(SearchStoresUseCaseDTO.Params params) {
         List<StoreEntity> storesEntities = this.storeRepository.searchStores(params.searchQuery, params.limit, params.offset);
 

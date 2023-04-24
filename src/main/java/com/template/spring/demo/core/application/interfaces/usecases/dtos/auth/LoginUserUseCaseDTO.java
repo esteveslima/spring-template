@@ -1,8 +1,8 @@
-package com.template.spring.demo.core.application.interfaces.dtos.usecases.auth;
+package com.template.spring.demo.core.application.interfaces.usecases.dtos.auth;
 
 import lombok.Data;
 
-public class LoginStoreUseCaseDTO {
+public class LoginUserUseCaseDTO {
 
     @Data
     public static class Params {

@@ -9,6 +9,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
+import java.util.Objects;
 
 
 @Documented
@@ -22,7 +23,7 @@ public @interface StoreEntityFieldValidator {
 
     String fieldName() default "";
 
-    class CustomValidator implements ConstraintValidator<StoreEntityFieldValidator, String> {
+    class CustomValidator implements ConstraintValidator<StoreEntityFieldValidator, Object> {
 
         private String fieldName;
 
@@ -32,7 +33,7 @@ public @interface StoreEntityFieldValidator {
         }
 
         @Override
-        public boolean isValid(String value, ConstraintValidatorContext context) {
+        public boolean isValid(Object value, ConstraintValidatorContext context) {
             boolean hasDefinedFieldName = this.fieldName != "";
             if(!hasDefinedFieldName){
                 String errorMessage = String.format("Validation annotation fieldName is required for '%s'", StoreEntity.class.getName());
@@ -41,7 +42,7 @@ public @interface StoreEntityFieldValidator {
 
             try{
                 switch (this.fieldName){
-                    case "name" -> StoreEntity.validateName(value);
+                    case "name" -> StoreEntity.validateName(Objects.toString(value, null));
                     default -> {
                         String errorMessage = String.format("Invalid fieldName '%s' for '%s' validation annotation", this.fieldName, StoreEntity.class.getName());
                         throw new RuntimeException(errorMessage);

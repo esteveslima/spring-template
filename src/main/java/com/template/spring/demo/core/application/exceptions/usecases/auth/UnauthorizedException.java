@@ -1,4 +1,4 @@
-package com.template.spring.demo.core.application.exceptions.auth;
+package com.template.spring.demo.core.application.exceptions.usecases.auth;
 
 public class UnauthorizedException extends RuntimeException {
     public final Object payload;

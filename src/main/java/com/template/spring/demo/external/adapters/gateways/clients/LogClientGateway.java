@@ -2,6 +2,7 @@ package com.template.spring.demo.external.adapters.gateways.clients;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.template.spring.demo.core.application.interfaces.ports.log.LogGateway;
 import com.template.spring.demo.external.infrastructure.annotations.DisableAOP;
 import org.slf4j.Logger;
@@ -38,10 +39,12 @@ public class LogClientGateway implements LogGateway {
     private String stringifyObject(Object obj) {
         try{
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
             String jsonString = objectMapper.writeValueAsString(obj);
+
             return jsonString;
         } catch(JsonProcessingException exception) {
-            System.err.println("Error converting JSON to object: " + exception.getMessage());
+            System.err.println("LogClient Error converting JSON to object: " + exception.getMessage());
             return obj.toString();
         }
     }

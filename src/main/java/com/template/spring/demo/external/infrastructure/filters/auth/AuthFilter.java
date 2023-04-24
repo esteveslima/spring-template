@@ -2,8 +2,7 @@ package com.template.spring.demo.external.infrastructure.filters.auth;
 
 import com.template.spring.demo.core.application.exceptions.token.InvalidTokenException;
 import com.template.spring.demo.core.application.interfaces.ports.token.TokenGateway;
-import com.template.spring.demo.core.application.interfaces.auth.AuthTokenPayloadDTO;
-import com.template.spring.demo.core.domain.entities.UserEntity;
+import com.template.spring.demo.core.application.interfaces.auth_token.AuthTokenPayloadDTO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

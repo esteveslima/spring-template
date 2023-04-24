@@ -1,8 +1,8 @@
 package com.template.spring.demo.core.application.usecases.auth;
 
-import com.template.spring.demo.core.application.exceptions.auth.UnauthorizedException;
-import com.template.spring.demo.core.application.interfaces.auth.AuthTokenPayloadDTO;
-import com.template.spring.demo.core.application.interfaces.dtos.usecases.auth.LoginStoreUseCaseDTO;
+import com.template.spring.demo.core.application.exceptions.usecases.auth.UnauthorizedException;
+import com.template.spring.demo.core.application.interfaces.auth_token.AuthTokenPayloadDTO;
+import com.template.spring.demo.core.application.interfaces.usecases.dtos.auth.LoginStoreUseCaseDTO;
 import com.template.spring.demo.core.application.interfaces.ports.hash.HashGateway;
 import com.template.spring.demo.core.application.interfaces.ports.token.TokenGateway;
 import com.template.spring.demo.core.domain.entities.UserEntity;
