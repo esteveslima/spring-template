@@ -29,6 +29,7 @@ public class RegisterProductUseCase {
         newProduct.setDescription(params.payload.description);
         newProduct.setPrice(params.payload.price);
         newProduct.setCurrency(params.payload.currency);
+        newProduct.setStock(params.payload.stock);
 
         StoreEntity userStore = this.storeRepository.getStoreByUserId(params.userId);
         newProduct.setStore(userStore);
@@ -41,7 +42,8 @@ public class RegisterProductUseCase {
                 registeredProduct.getName(),
                 registeredProduct.getDescription(),
                 registeredProduct.getPrice(),
-                registeredProduct.getCurrency()
+                registeredProduct.getCurrency(),
+                registeredProduct.getStock()
         );
     }
 

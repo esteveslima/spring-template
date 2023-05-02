@@ -44,6 +44,7 @@ public class ModifyProductUseCase {
         if(params.payload.description != null) productToUpdate.setDescription(params.payload.description);
         if(params.payload.price > 0) productToUpdate.setPrice(params.payload.price);
         if(params.payload.currency != null) productToUpdate.setCurrency(params.payload.currency);
+        if(params.payload.stock > 0) productToUpdate.setPrice(params.payload.stock);
 
         ProductEntity updatedProduct = this.productRepository.updateProduct(productToUpdate);
 
@@ -53,7 +54,8 @@ public class ModifyProductUseCase {
                 updatedProduct.getName(),
                 updatedProduct.getDescription(),
                 updatedProduct.getPrice(),
-                updatedProduct.getCurrency()
+                updatedProduct.getCurrency(),
+                updatedProduct.getStock()
         );
     }
 

@@ -48,7 +48,8 @@ public class DeleteProductUseCase {
                 deletedProduct.getName(),
                 deletedProduct.getDescription(),
                 deletedProduct.getPrice(),
-                deletedProduct.getCurrency()
+                deletedProduct.getCurrency(),
+                deletedProduct.getStock()
         );
     }
 

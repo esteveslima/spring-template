@@ -33,7 +33,8 @@ public class SearchProductsUseCase {
                         productEntity.getName(),
                         productEntity.getDescription(),
                         productEntity.getPrice(),
-                        productEntity.getCurrency()
+                        productEntity.getCurrency(),
+                        productEntity.getStock()
                 )
         ).toList();
 

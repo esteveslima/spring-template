@@ -18,5 +18,6 @@ public class DeleteProductUseCaseDTO {
         public final String description;
         public final double price;
         public final ProductEntity.CurrencyEnum currency;
+        public final int stock;
     }
 }

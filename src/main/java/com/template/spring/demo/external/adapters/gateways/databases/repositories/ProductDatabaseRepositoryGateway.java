@@ -41,7 +41,9 @@ public class ProductDatabaseRepositoryGateway implements ProductRepository {
 
         try{
             ProductEntity result = typedQuery.getSingleResult();
-
+            System.out.println(result.getStore().getName());
+            System.out.println(result.getCurrency());
+            System.out.println(result.getPrice());
             return result;
         } catch(NoResultException exception) {
             throw new ProductNotFoundException(Integer.toString(id), exception);

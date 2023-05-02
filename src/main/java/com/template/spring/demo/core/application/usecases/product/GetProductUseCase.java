@@ -25,7 +25,8 @@ public class GetProductUseCase {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getCurrency()
+                product.getCurrency(),
+                product.getStock()
         );
     }
 }

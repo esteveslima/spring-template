@@ -36,6 +36,9 @@ public class ProductEntity {
     @Enumerated(EnumType.STRING)
     private CurrencyEnum currency;
 
+    @Column(name = "stock")
+    private int stock;
+
     public enum CurrencyEnum {
         USD,
         EUR;
@@ -43,7 +46,7 @@ public class ProductEntity {
 
     //
 
-    public ProductEntity(StoreEntity store, String name, String description, double price, CurrencyEnum currency) {
+    public ProductEntity(StoreEntity store, String name, String description, double price, CurrencyEnum currency, int stock) {
         ProductEntity.validateName(name);
         ProductEntity.validateDescription(description);
         ProductEntity.validatePrice(price);
@@ -54,6 +57,7 @@ public class ProductEntity {
         this.description = description;
         this.price = price;
         this.currency = currency;
+        this.stock = stock;
     }
 
     public void setName(String name) throws ProductFieldFailedValidationException {
@@ -69,6 +73,11 @@ public class ProductEntity {
     public void setPrice(double price) throws ProductFieldFailedValidationException {
         ProductEntity.validatePrice(price);
         this.price = price;
+    }
+
+    public void setStock(int stock) throws ProductFieldFailedValidationException {
+        ProductEntity.validateStock(stock);
+        this.stock = stock;
     }
 
     //
@@ -146,5 +155,16 @@ public class ProductEntity {
             validationFailuresMap.put("currencyStr", currencyStr);
             throw new ProductFieldFailedValidationException(errorMessage, validationFailuresMap);
         }
+    }
+
+    public static void validateStock(int stock) throws ProductFieldFailedValidationException {
+        if(stock < 0){
+            String errorMessage = "Stock must be greater than zero";
+            Map<String, Object> validationFailuresMap = new HashMap<String, Object>();
+            validationFailuresMap.put("stock", stock);
+            throw new ProductFieldFailedValidationException(errorMessage, validationFailuresMap);
+        }
+
+        return;
     }
 }

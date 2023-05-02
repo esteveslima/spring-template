@@ -41,6 +41,7 @@ public @interface StoreEntityFieldValidator {
             }
 
             try{
+                //TODO: change switch case to multiple annotations
                 switch (this.fieldName){
                     case "name" -> StoreEntity.validateName(Objects.toString(value, null));
                     default -> {

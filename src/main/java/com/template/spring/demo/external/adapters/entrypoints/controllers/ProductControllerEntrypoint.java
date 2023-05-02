@@ -52,7 +52,8 @@ public class ProductControllerEntrypoint {
                             requestBody.name,
                             requestBody.description,
                             requestBody.price,
-                            ProductEntity.CurrencyEnum.valueOf(requestBody.currency)
+                            ProductEntity.CurrencyEnum.valueOf(requestBody.currency),
+                            requestBody.stock
                     )
             );
 
@@ -64,7 +65,8 @@ public class ProductControllerEntrypoint {
                     useCaseResultDTO.name,
                     useCaseResultDTO.description,
                     useCaseResultDTO.price,
-                    useCaseResultDTO.currency
+                    useCaseResultDTO.currency,
+                    useCaseResultDTO.stock
             );
         } catch (ProductFieldFailedValidationException exception){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
@@ -89,7 +91,8 @@ public class ProductControllerEntrypoint {
                     useCaseResultDTO.name,
                     useCaseResultDTO.description,
                     useCaseResultDTO.price,
-                    useCaseResultDTO.currency
+                    useCaseResultDTO.currency,
+                    useCaseResultDTO.stock
             );
         } catch (ProductNotFoundException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
@@ -123,7 +126,8 @@ public class ProductControllerEntrypoint {
                             product.name,
                             product.description,
                             product.price,
-                            product.currency
+                            product.currency,
+                            product.stock
                     )
             ).toList());
         } catch (ProductFieldFailedValidationException exception){
@@ -150,7 +154,8 @@ public class ProductControllerEntrypoint {
                             requestBody.name,
                             requestBody.description,
                             requestBody.price,
-                            ProductEntity.CurrencyEnum.valueOf(requestBody.currency)
+                            ProductEntity.CurrencyEnum.valueOf(requestBody.currency),
+                            requestBody.stock
                     )
             );
 
@@ -162,7 +167,8 @@ public class ProductControllerEntrypoint {
                     useCaseResultDTO.name,
                     useCaseResultDTO.description,
                     useCaseResultDTO.price,
-                    useCaseResultDTO.currency
+                    useCaseResultDTO.currency,
+                    useCaseResultDTO.stock
             );
         } catch (ProductFieldFailedValidationException exception){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
@@ -194,7 +200,8 @@ public class ProductControllerEntrypoint {
                     useCaseResultDTO.name,
                     useCaseResultDTO.description,
                     useCaseResultDTO.price,
-                    useCaseResultDTO.currency
+                    useCaseResultDTO.currency,
+                    useCaseResultDTO.stock
             );
         } catch (ProductNotFoundException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");

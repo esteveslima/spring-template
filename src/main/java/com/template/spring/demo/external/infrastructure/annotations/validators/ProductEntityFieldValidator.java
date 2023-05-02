@@ -10,7 +10,6 @@ import jakarta.validation.Payload;
 import java.lang.annotation.*;
 import java.util.Objects;
 
-
 @Documented
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
@@ -40,11 +39,13 @@ public @interface ProductEntityFieldValidator {
             }
 
             try{
+                //TODO: change switch case to multiple annotations
                 switch (this.fieldName){
                     case "name" -> ProductEntity.validateName(Objects.toString(value, null));
                     case "description" -> ProductEntity.validateDescription(Objects.toString(value, null));
                     case "price" -> ProductEntity.validatePrice((double)value);
                     case "currency" -> ProductEntity.validateCurrency(Objects.toString(value, null));
+                    case "stock" -> ProductEntity.validateStock((int)value);
                     default -> {
                         String errorMessage = String.format("Invalid fieldName '%s' for '%s' validation annotation", this.fieldName, ProductEntity.class.getName());
                         throw new RuntimeException(errorMessage);

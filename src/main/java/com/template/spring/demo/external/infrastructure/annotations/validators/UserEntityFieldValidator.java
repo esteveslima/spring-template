@@ -41,6 +41,7 @@ public @interface UserEntityFieldValidator {
             }
 
             try{
+                //TODO: change switch case to multiple annotations
                 switch (this.fieldName){
                     case "username" -> UserEntity.validateUsername(Objects.toString(value, null));
                     case "email" -> UserEntity.validateEmail(Objects.toString(value, null));
